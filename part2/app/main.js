@@ -20325,7 +20325,7 @@
   \***************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -20351,39 +20351,80 @@
 	  function NewSurvey(props) {
 	    _classCallCheck(this, NewSurvey);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(NewSurvey).call(this, props));
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(NewSurvey).call(this, props));
+	
+	    _this.state = { counter: 1 };
+	    return _this;
 	  }
 	
 	  _createClass(NewSurvey, [{
-	    key: "submitNewSurvey",
+	    key: 'submitNewSurvey',
 	    value: function submitNewSurvey() {
 	      var title = this.refs.surveyTitle.value;
 	      var pointValue = this.refs.pointValue.value;
 	      var description = this.refs.description.value;
-	      var questions = [{ title: this.refs.question.value }];
+	      var questionArray = this.pullQuestions();
+	      var questions = questionArray.map(function (question) {
+	        return { title: question };
+	      });
 	      var newSurvey = { title: title, pointValue: pointValue, description: description, questions: questions };
 	      var currentSurveys = this.props.app.state.mySurveys;
 	      this.props.app.setState({ mySurveys: currentSurveys.concat(newSurvey), pointValue: 0 });
-	      // this.props.setState({})
 	    }
 	  }, {
-	    key: "render",
+	    key: 'addQuestionInput',
+	    value: function addQuestionInput() {
+	      this.setState({ counter: this.state.counter += 1 });
+	    }
+	  }, {
+	    key: 'pullQuestions',
+	    value: function pullQuestions() {
+	      var questions = [];
+	      for (var ref in this.refs) {
+	        if (ref.indexOf('question') >= 0) {
+	          questions.push(this.refs[ref].value);
+	        }
+	      }
+	      return questions;
+	    }
+	  }, {
+	    key: 'render',
 	    value: function render() {
+	      var rows = [];
+	      for (var i = 0; i < this.state.counter; i++) {
+	        rows.push(_react2.default.createElement(
+	          'div',
+	          { key: i },
+	          i + 1,
+	          ': ',
+	          _react2.default.createElement('input', { type: 'text', ref: "question" + i, placeholder: 'Question' }),
+	          ' '
+	        ));
+	      }
+	
 	      return _react2.default.createElement(
-	        "div",
+	        'div',
 	        null,
-	        "Title: ",
-	        _react2.default.createElement("input", { type: "text", ref: "surveyTitle", placeholder: "Title" }),
-	        "Point Value: ",
-	        _react2.default.createElement("input", { type: "text", ref: "pointValue", placeholder: "Point Value" }),
-	        "Description: ",
-	        _react2.default.createElement("input", { type: "text", ref: "description", placeholder: "Description" }),
-	        "Question 1: ",
-	        _react2.default.createElement("input", { type: "text", ref: "question", placeholder: "Question" }),
+	        'Title: ',
+	        _react2.default.createElement('input', { type: 'text', ref: 'surveyTitle', placeholder: 'Title' }),
+	        'Point Value: ',
+	        _react2.default.createElement('input', { type: 'text', ref: 'pointValue', placeholder: 'Point Value' }),
+	        'Description: ',
+	        _react2.default.createElement('input', { type: 'text', ref: 'description', placeholder: 'Description' }),
+	        'Questions: ',
+	        rows.map(function (i) {
+	          return i;
+	        }),
+	        '   ',
 	        _react2.default.createElement(
-	          "button",
+	          'button',
+	          { onClick: this.addQuestionInput.bind(this) },
+	          '+'
+	        ),
+	        _react2.default.createElement(
+	          'button',
 	          { onClick: this.submitNewSurvey.bind(this, this.props) },
-	          "Submit "
+	          'Submit'
 	        )
 	      );
 	    }
