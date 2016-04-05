@@ -1,6 +1,7 @@
 'use strict'
 import React from 'react';
 import Survey from './surveys.jsx';
+import NewSurvey from './newSurvey.jsx';
 
 export default class App extends React.Component{
   constructor(props){
@@ -25,6 +26,7 @@ export default class App extends React.Component{
 
    render(){
      return(<div>
+           <NewSurvey app={this} />
            <Survey surveys={this.state.mySurveys}/>
            </div>)
 
