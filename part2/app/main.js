@@ -20276,6 +20276,19 @@
 	   }
 	
 	   _createClass(Surveys, [{
+	      key: 'toggleEditMode',
+	      value: function toggleEditMode() {
+	         var toggleEdit;
+	         var currentState = this.props.app.state;
+	
+	         if (currentState.editMode == false) {
+	            toggleEdit = true;
+	         } else {
+	            toggleEdit = false;
+	         }
+	         this.props.app.setState({ mySurveys: currentState.mySurveys, points: currentState.points, editMode: toggleEdit });
+	      }
+	   }, {
 	      key: 'render',
 	      value: function render() {
 	         var _this2 = this;
@@ -20286,7 +20299,7 @@
 	            null,
 	            _react2.default.createElement(
 	               'button',
-	               null,
+	               { onClick: this.toggleEditMode.bind(this) },
 	               'EditMode'
 	            ),
 	            this.props.surveys.map(function (survey) {
