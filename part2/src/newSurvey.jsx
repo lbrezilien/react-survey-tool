@@ -6,7 +6,8 @@ export default class NewSurvey extends React.Component{
       this.state = {counter: 1}
     }
 
-    submitNewSurvey(){
+    submitNewSurvey(e){
+      e.preventDefault
       let title = this.refs.surveyTitle.value
       let pointValue = this.refs.pointValue.value
       let description = this.refs.description.value
@@ -17,8 +18,15 @@ export default class NewSurvey extends React.Component{
       this.props.app.setState({mySurveys: currentSurveys.concat(newSurvey), pointValue:0})
     }
 
-    addQuestionInput(){
+    addQuestionInput(e){
+      e.preventDefault
       this.setState({counter: this.state.counter += 1}) ;
+    }
+
+    validateTitle(input){
+      if (input.value.length() < validAmount){
+        return
+      }
     }
 
     pullQuestions(){
@@ -38,11 +46,19 @@ export default class NewSurvey extends React.Component{
         }
 
        return(<div>
-                  Title: <input type="text" ref="surveyTitle" placeholder="Title"/>
-                  Point Value: <input type="text" ref="pointValue" placeholder="Point Value"/>
-                  Description: <input type="text" ref="description" placeholder="Description"/>
-                  Questions: {rows.map((i)=> i)}   <button onClick={this.addQuestionInput.bind(this)}>+</button>
-                  <button onClick={this.submitNewSurvey.bind(this,this.props)}>Submit</button>
+                 <form>
+                  Title: <input type="text" ref="surveyTitle"  placeholder="Title" required={true} pattern={".{2,100}"} title="Must be between 5 and 100 Characters"/>
+                <div>
+                  Point Value: <input type="number" ref="pointValue" placeholder="Point Value" required={true} min="0"/>
+                </div>
+                <div>
+                  Description: <input type="textarea" ref="description" placeholder="Description" required={true}  pattern={".{2,500}"} title="Must be between 2 and 500 Characters"/>
+                </div>
+                <div>
+                  Questions: {rows.map((i)=> i)}   <a href="#" onClick={this.addQuestionInput.bind(this)}>+</a>
+                </div>
+                  <button onClick={ this.submitNewSurvey.bind(this,this.props)}>Submit</button>
+                </form>
              </div>)
    }
 }

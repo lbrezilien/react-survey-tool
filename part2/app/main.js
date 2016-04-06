@@ -20368,7 +20368,8 @@
 	
 	  _createClass(NewSurvey, [{
 	    key: 'submitNewSurvey',
-	    value: function submitNewSurvey() {
+	    value: function submitNewSurvey(e) {
+	      e.preventDefault;
 	      var title = this.refs.surveyTitle.value;
 	      var pointValue = this.refs.pointValue.value;
 	      var description = this.refs.description.value;
@@ -20382,8 +20383,16 @@
 	    }
 	  }, {
 	    key: 'addQuestionInput',
-	    value: function addQuestionInput() {
+	    value: function addQuestionInput(e) {
+	      e.preventDefault;
 	      this.setState({ counter: this.state.counter += 1 });
+	    }
+	  }, {
+	    key: 'validateTitle',
+	    value: function validateTitle(input) {
+	      if (input.value.length() < validAmount) {
+	        return;
+	      }
 	    }
 	  }, {
 	    key: 'pullQuestions',
@@ -20414,26 +20423,42 @@
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        'Title: ',
-	        _react2.default.createElement('input', { type: 'text', ref: 'surveyTitle', placeholder: 'Title' }),
-	        'Point Value: ',
-	        _react2.default.createElement('input', { type: 'text', ref: 'pointValue', placeholder: 'Point Value' }),
-	        'Description: ',
-	        _react2.default.createElement('input', { type: 'text', ref: 'description', placeholder: 'Description' }),
-	        'Questions: ',
-	        rows.map(function (i) {
-	          return i;
-	        }),
-	        '   ',
 	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.addQuestionInput.bind(this) },
-	          '+'
-	        ),
-	        _react2.default.createElement(
-	          'button',
-	          { onClick: this.submitNewSurvey.bind(this, this.props) },
-	          'Submit'
+	          'form',
+	          null,
+	          'Title: ',
+	          _react2.default.createElement('input', { type: 'text', ref: 'surveyTitle', placeholder: 'Title', required: true, pattern: ".{2,100}", title: 'Must be between 5 and 100 Characters' }),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Point Value: ',
+	            _react2.default.createElement('input', { type: 'number', ref: 'pointValue', placeholder: 'Point Value', required: true, min: '0' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Description: ',
+	            _react2.default.createElement('input', { type: 'textarea', ref: 'description', placeholder: 'Description', required: true, pattern: ".{2,500}", title: 'Must be between 2 and 500 Characters' })
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            'Questions: ',
+	            rows.map(function (i) {
+	              return i;
+	            }),
+	            '   ',
+	            _react2.default.createElement(
+	              'a',
+	              { href: '#', onClick: this.addQuestionInput.bind(this) },
+	              '+'
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.submitNewSurvey.bind(this, this.props) },
+	            'Submit'
+	          )
 	        )
 	      );
 	    }

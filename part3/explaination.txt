@@ -1,0 +1,48 @@
+My first assumption is that server side technologies are allowed because theres no otherway to persist the options that the user wants to load on the front end of their store. For this reason, I immediately assume that at the very least one would have a user model and a setting model. The setting instance would belong to the user model and the user would only be allowed to have one instance. The way I would enforce this on a client side is by creating the instance upon creation of the account that way no form is later needed to create it.
+
+Having set up these models, the easiest fast way to implement some regard of customizations is to present options the users as to what they can customize in the form of drop downs. For example, the setting model would consist of the following fields:
+    background : string
+    typography : string
+    colors : string
+    borders : string
+    logo :string - upload
+
+From there, I would create a form to allow the user to select these options in their admin panel using background color as an example,
+first I would create 3 'CSS' classes called 'default', 'peach', and 'grey-patterned'
+within the classes, I would define the styles that can make the classes provide the visual effects that I'm looking for. Finally, I would have the options persist to the database after the user selects it and when the storefront is loaded, I would dynamically load the classes based off of the user selection. Using Ruby on Rails as an example :
+
+    Models
+
+    User.rb
+
+    first_name, string
+    last_name, :string
+    email, :string
+    password, :string
+
+    Setting.rb
+
+    background : string
+    typography : string
+    colors : string
+    borders : string
+    logo :string - upload
+
+    Controller.rb
+
+    def index
+      Within this action,  I would call to the database to get the current store's owner either with by looking up the params ID or the slug depending on the restful routes. After finding the instance I would assign it as a class variable so that I can uses in my embedded ruby.
+      current_store = Store.find_by(id: params[:id])
+      @settings = current_store.settings
+    end
+
+    Index.html.erb
+
+    <!-- this is where I would interpolate a variable into the view for dynamic loading -->
+    <div class="<%= @settings.background_class %>">
+        <div class="<%= @settings.logo_class %>"> </div>
+            <p class="product-description <%= @settings.font_class %>"> Some description here </p>
+        </div>
+    </div>
+
+    The pros to this approach is that the style combinations that the platform allows are thought of before hand and on the user end, customization is easier. Everything is as simple as choosing from a drop down. Also, adding 'themes' or making changes to a current theme  is very easy, creating a theme is as simple as jumping into the stylesheet and changing the attributes of the class. The con of this approach is that it can be limiting in that customizing isn't as free as it would be if the users could select their own colors or import their own fonts. Also if you allow the logo customization, you then need to worry about image processing for both size for page load and storage costs as well as size for fit on the page.
