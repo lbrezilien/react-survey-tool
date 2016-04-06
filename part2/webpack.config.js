@@ -5,7 +5,7 @@ module.exports = {
     main: ['./src/main.jsx']
   },
   output: {
-    filename: './app/[name].js'
+    filename: './app/js/[name].js'
   },
   module: {
     loaders: [
