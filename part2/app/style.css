@@ -6,3 +6,15 @@
 .hideInfo-true{
   display: none;
 }
+
+.center-text{
+  text-align: center;
+}
+
+.logo-position{
+  padding:1% !important;
+}
+
+.container{
+  margin-top: 2%;
+}

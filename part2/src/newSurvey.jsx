@@ -9,11 +9,13 @@ export default class NewSurvey extends React.Component{
     submitNewSurvey(e){
       e.preventDefault
       let valid = this.validateInputs(this.refs)
-      debugger;
       if(!valid){ alert('Please complete the form correctly before submiting'); return }
+      //this is the part of the code that creates the survey object as per the instructions
       let newSurvey = this.createNewSurveyObject(this.refs)
       let currentSurveys = this.props.app.state.mySurveys
       this.props.app.setState({mySurveys: currentSurveys.concat(newSurvey), pointValue:0})
+      this.clearFormInputs(this.refs)
+      alert('Your survey has been created! Check it out below');
     }
 
     addQuestionInput(e){
@@ -21,7 +23,17 @@ export default class NewSurvey extends React.Component{
       this.setState({counter: this.state.counter += 1}) ;
     }
 
+    clearFormInputs(inputs){
+      for(var i in inputs){
+          console.log(`use to be ${inputs[i]}`)
+          inputs[i].value = ""
+          console.log(`now ${inputs[i]}`)
+      }
+
+    }
+
     createNewSurveyObject(inputs){
+      //This returns the Survey JSON Object
       let title = inputs.surveyTitle.value
       let pointValue = inputs.pointValue.value
       let description = inputs.description.value
@@ -50,22 +62,24 @@ export default class NewSurvey extends React.Component{
     render(){
         let rows = []
         for(let i=0; i < this.state.counter; i++){
-          rows.push( <div key={i}>{i+1}: <input type="text" ref={"question"+i} pattern={".{2,100}"} placeholder="Question" title="Must be between 2 and 500 Characters" required={true}/> </div>)
+          rows.push( <div key={i}> <input type="text" ref={"question"+i} pattern={".{2,100}"} placeholder={`Question ${i+1}`} title="Must be between 2 and 500 Characters" required={true}/> </div>)
         }
 
        return(<div>
                  <form>
-                  Title: <input type="text" ref="surveyTitle"  placeholder="Title" required={true} pattern={".{2,100}"} title="Must be between 5 and 100 Characters"/>
-                <div>
-                  Point Value: <input type="number" ref="pointValue" placeholder="Point Value" required={true} min="0"/>
-                </div>
-                <div>
-                  Description: <input type="textarea" ref="description" placeholder="Description" required={true}  pattern={".{2,500}"} title="Must be between 2 and 500 Characters"/>
-                </div>
-                <div>
-                  Questions: {rows.map((i)=> i)}   <a href="#" onClick={this.addQuestionInput.bind(this)} >+</a>
-                </div>
-                  <button onClick={ this.submitNewSurvey.bind(this,this.props)}>Submit</button>
+                  Title: <input type="text" ref="surveyTitle"  required={true} pattern={".{2,100}"} title="Must be between 5 and 100 Characters"/>
+
+                  Point Value: <input type="number" ref="pointValue"  required={true} min="0"/>
+
+                  Description: <textarea type="text-area" ref="description"  required={true}  pattern={".{2,500}"} title="Must be between 2 and 500 Characters"/>
+
+                  Questions: {rows.map((i)=> i)}
+                  <div className="col s3 ">
+                    <a href="#" className="btn-floating btn-large blue" onClick={this.addQuestionInput.bind(this)} >+</a>
+                  </div>
+                  <div className="col s3 offset-s6">
+                      <button className="waves-effect waves-light btn purple" onClick={ this.submitNewSurvey.bind(this,this.props)}>Submit</button>
+                  </div>
                 </form>
              </div>)
    }

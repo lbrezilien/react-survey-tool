@@ -20181,6 +20181,10 @@
 	
 	var _newSurvey2 = _interopRequireDefault(_newSurvey);
 	
+	var _navbar = __webpack_require__(/*! ./navbar.jsx */ 165);
+	
+	var _navbar2 = _interopRequireDefault(_navbar);
+	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -20215,13 +20219,57 @@
 	  }
 	
 	  _createClass(App, [{
+	    key: 'toggleEditMode',
+	    value: function toggleEditMode() {
+	      var toggleEdit;
+	      var currentState = this.state;
+	      if (currentState.editMode == false) {
+	        toggleEdit = true;
+	      } else {
+	        toggleEdit = false;
+	      }
+	      this.setState({ mySurveys: currentState.mySurveys, points: currentState.points, editMode: toggleEdit });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
 	      return _react2.default.createElement(
 	        'div',
 	        null,
-	        _react2.default.createElement(_newSurvey2.default, { app: this }),
-	        _react2.default.createElement(_surveys2.default, { app: this, surveys: this.state.mySurveys })
+	        _react2.default.createElement(_navbar2.default, null),
+	        _react2.default.createElement(
+	          'div',
+	          { className: 'container' },
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'col s8 offset-s2' },
+	              _react2.default.createElement(_newSurvey2.default, { app: this })
+	            )
+	          ),
+	          _react2.default.createElement('div', { className: 'divider' }),
+	          _react2.default.createElement(
+	            'div',
+	            { className: 'row' },
+	            _react2.default.createElement(
+	              'div',
+	              { className: 'center-text' },
+	              _react2.default.createElement(
+	                'h3',
+	                null,
+	                ' My Surveys '
+	              ),
+	              _react2.default.createElement(
+	                'a',
+	                { className: 'btn-floating btn-large red', onClick: this.toggleEditMode.bind(this) },
+	                'Edit'
+	              )
+	            ),
+	            _react2.default.createElement(_surveys2.default, { app: this, surveys: this.state.mySurveys })
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -20276,19 +20324,6 @@
 	   }
 	
 	   _createClass(Surveys, [{
-	      key: 'toggleEditMode',
-	      value: function toggleEditMode() {
-	         var toggleEdit;
-	         var currentState = this.props.app.state;
-	
-	         if (currentState.editMode == false) {
-	            toggleEdit = true;
-	         } else {
-	            toggleEdit = false;
-	         }
-	         this.props.app.setState({ mySurveys: currentState.mySurveys, points: currentState.points, editMode: toggleEdit });
-	      }
-	   }, {
 	      key: 'render',
 	      value: function render() {
 	         var _this2 = this;
@@ -20297,11 +20332,6 @@
 	         return _react2.default.createElement(
 	            'div',
 	            null,
-	            _react2.default.createElement(
-	               'button',
-	               { onClick: this.toggleEditMode.bind(this) },
-	               'EditMode'
-	            ),
 	            this.props.surveys.map(function (survey) {
 	               return _react2.default.createElement(
 	                  'div',
@@ -20371,13 +20401,15 @@
 	    value: function submitNewSurvey(e) {
 	      e.preventDefault;
 	      var valid = this.validateInputs(this.refs);
-	      debugger;
 	      if (!valid) {
 	        alert('Please complete the form correctly before submiting');return;
 	      }
+	      //this is the part of the code that creates the survey object as per the instructions
 	      var newSurvey = this.createNewSurveyObject(this.refs);
 	      var currentSurveys = this.props.app.state.mySurveys;
 	      this.props.app.setState({ mySurveys: currentSurveys.concat(newSurvey), pointValue: 0 });
+	      this.clearFormInputs(this.refs);
+	      alert('Your survey has been created! Check it out below');
 	    }
 	  }, {
 	    key: 'addQuestionInput',
@@ -20386,8 +20418,18 @@
 	      this.setState({ counter: this.state.counter += 1 });
 	    }
 	  }, {
+	    key: 'clearFormInputs',
+	    value: function clearFormInputs(inputs) {
+	      for (var i in inputs) {
+	        console.log('use to be ' + inputs[i]);
+	        inputs[i].value = "";
+	        console.log('now ' + inputs[i]);
+	      }
+	    }
+	  }, {
 	    key: 'createNewSurveyObject',
 	    value: function createNewSurveyObject(inputs) {
+	      //This returns the Survey JSON Object
 	      var title = inputs.surveyTitle.value;
 	      var pointValue = inputs.pointValue.value;
 	      var description = inputs.description.value;
@@ -20426,9 +20468,8 @@
 	        rows.push(_react2.default.createElement(
 	          'div',
 	          { key: i },
-	          i + 1,
-	          ': ',
-	          _react2.default.createElement('input', { type: 'text', ref: "question" + i, pattern: ".{2,100}", placeholder: 'Question', title: 'Must be between 2 and 500 Characters', required: true }),
+	          ' ',
+	          _react2.default.createElement('input', { type: 'text', ref: "question" + i, pattern: ".{2,100}", placeholder: 'Question ' + (i + 1), title: 'Must be between 2 and 500 Characters', required: true }),
 	          ' '
 	        ));
 	      }
@@ -20440,37 +20481,32 @@
 	          'form',
 	          null,
 	          'Title: ',
-	          _react2.default.createElement('input', { type: 'text', ref: 'surveyTitle', placeholder: 'Title', required: true, pattern: ".{2,100}", title: 'Must be between 5 and 100 Characters' }),
+	          _react2.default.createElement('input', { type: 'text', ref: 'surveyTitle', required: true, pattern: ".{2,100}", title: 'Must be between 5 and 100 Characters' }),
+	          'Point Value: ',
+	          _react2.default.createElement('input', { type: 'number', ref: 'pointValue', required: true, min: '0' }),
+	          'Description: ',
+	          _react2.default.createElement('textarea', { type: 'text-area', ref: 'description', required: true, pattern: ".{2,500}", title: 'Must be between 2 and 500 Characters' }),
+	          'Questions: ',
+	          rows.map(function (i) {
+	            return i;
+	          }),
 	          _react2.default.createElement(
 	            'div',
-	            null,
-	            'Point Value: ',
-	            _react2.default.createElement('input', { type: 'number', ref: 'pointValue', placeholder: 'Point Value', required: true, min: '0' })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            'Description: ',
-	            _react2.default.createElement('input', { type: 'textarea', ref: 'description', placeholder: 'Description', required: true, pattern: ".{2,500}", title: 'Must be between 2 and 500 Characters' })
-	          ),
-	          _react2.default.createElement(
-	            'div',
-	            null,
-	            'Questions: ',
-	            rows.map(function (i) {
-	              return i;
-	            }),
-	            '   ',
+	            { className: 'col s3 ' },
 	            _react2.default.createElement(
 	              'a',
-	              { href: '#', onClick: this.addQuestionInput.bind(this) },
+	              { href: '#', className: 'btn-floating btn-large blue', onClick: this.addQuestionInput.bind(this) },
 	              '+'
 	            )
 	          ),
 	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.submitNewSurvey.bind(this, this.props) },
-	            'Submit'
+	            'div',
+	            { className: 'col s3 offset-s6' },
+	            _react2.default.createElement(
+	              'button',
+	              { className: 'waves-effect waves-light btn purple', onClick: this.submitNewSurvey.bind(this, this.props) },
+	              'Submit'
+	            )
 	          )
 	        )
 	      );
@@ -20489,7 +20525,7 @@
   \************************/
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	"use strict";
 	
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
@@ -20509,6 +20545,8 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
+	//Displays a survey
+	
 	var Suvery = function (_React$Component) {
 	  _inherits(Suvery, _React$Component);
 	
@@ -20519,42 +20557,51 @@
 	  }
 	
 	  _createClass(Suvery, [{
-	    key: 'render',
+	    key: "render",
 	    value: function render() {
 	      var survey = this.props.survey;
 	      return _react2.default.createElement(
-	        'div',
-	        null,
+	        "div",
+	        { className: "card flow-text" },
 	        _react2.default.createElement(
-	          'h1',
-	          null,
-	          'Title: ',
-	          survey.title
+	          "div",
+	          { className: "card-content " },
+	          _react2.default.createElement(
+	            "h4",
+	            null,
+	            "Title: ",
+	            survey.title
+	          ),
+	          _react2.default.createElement(
+	            "h5",
+	            null,
+	            "Point Value: ",
+	            survey.pointValue
+	          ),
+	          _react2.default.createElement(
+	            "h5",
+	            null,
+	            "Description: ",
+	            survey.description
+	          )
 	        ),
+	        _react2.default.createElement("div", { className: "divider" }),
 	        _react2.default.createElement(
-	          'h2',
-	          null,
-	          'Point Value: ',
-	          survey.pointValue
-	        ),
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          'Description: ',
-	          survey.description
-	        ),
-	        _react2.default.createElement(
-	          'h3',
-	          null,
-	          'Questions:'
-	        ),
-	        survey.questions.map(function (q) {
-	          return _react2.default.createElement(
-	            'li',
-	            { key: survey.questions.indexOf(q) },
-	            q.title
-	          );
-	        })
+	          "div",
+	          { className: "card-content" },
+	          _react2.default.createElement(
+	            "h4",
+	            null,
+	            "Questions:"
+	          ),
+	          survey.questions.map(function (q) {
+	            return _react2.default.createElement(
+	              "li",
+	              { key: survey.questions.indexOf(q) },
+	              q.title
+	            );
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -20606,38 +20653,47 @@
 	      var survey = this.props.survey;
 	      return _react2.default.createElement(
 	        "div",
-	        null,
+	        { className: "card flow-text" },
 	        _react2.default.createElement(
-	          "h1",
-	          null,
-	          "Title: ",
-	          _react2.default.createElement("input", { type: "text", ref: "title", defaultValue: survey.title }),
-	          " "
+	          "div",
+	          { className: "card-content " },
+	          _react2.default.createElement(
+	            "h4",
+	            null,
+	            "Title: ",
+	            _react2.default.createElement("input", { type: "text", ref: "title", defaultValue: survey.title }),
+	            " "
+	          ),
+	          _react2.default.createElement(
+	            "h5",
+	            null,
+	            "Point Value: ",
+	            _react2.default.createElement("input", { type: "text", ref: "pointValue", defaultValue: survey.pointValue })
+	          ),
+	          _react2.default.createElement(
+	            "h5",
+	            null,
+	            "Description: ",
+	            _react2.default.createElement("input", { type: "text", ref: "description", defaultValue: survey.description })
+	          )
 	        ),
+	        _react2.default.createElement("div", { className: "divider" }),
 	        _react2.default.createElement(
-	          "h2",
-	          null,
-	          "Point Value: ",
-	          _react2.default.createElement("input", { type: "text", ref: "pointValue", defaultValue: survey.pointValue })
-	        ),
-	        _react2.default.createElement(
-	          "h3",
-	          null,
-	          "Description: ",
-	          _react2.default.createElement("input", { type: "text", ref: "description", defaultValue: survey.description })
-	        ),
-	        _react2.default.createElement(
-	          "h3",
-	          null,
-	          "Questions:"
-	        ),
-	        survey.questions.map(function (q) {
-	          return _react2.default.createElement(
-	            "li",
-	            { key: survey.questions.indexOf(q) },
-	            _react2.default.createElement("input", { type: "text", ref: 'question' + survey.questions.indexOf(q), defaultValue: q.title })
-	          );
-	        })
+	          "div",
+	          { className: "card-content" },
+	          _react2.default.createElement(
+	            "h4",
+	            null,
+	            "Questions:"
+	          ),
+	          survey.questions.map(function (q) {
+	            return _react2.default.createElement(
+	              "li",
+	              { key: survey.questions.indexOf(q) },
+	              _react2.default.createElement("input", { type: "text", ref: 'question' + survey.questions.indexOf(q), defaultValue: q.title })
+	            );
+	          })
+	        )
 	      );
 	    }
 	  }]);
@@ -20646,6 +20702,97 @@
 	}(_react2.default.Component);
 	
 	exports.default = EditSuvery;
+
+/***/ },
+/* 165 */
+/*!************************!*\
+  !*** ./src/navbar.jsx ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	   value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Navbar = function (_React$Component) {
+	   _inherits(Navbar, _React$Component);
+	
+	   function Navbar() {
+	      _classCallCheck(this, Navbar);
+	
+	      return _possibleConstructorReturn(this, Object.getPrototypeOf(Navbar).apply(this, arguments));
+	   }
+	
+	   _createClass(Navbar, [{
+	      key: "render",
+	      value: function render() {
+	         return _react2.default.createElement(
+	            "nav",
+	            null,
+	            _react2.default.createElement(
+	               "div",
+	               { className: "nav-wrapper white" },
+	               _react2.default.createElement(
+	                  "a",
+	                  { href: "#", className: "brand-logo logo-position" },
+	                  _react2.default.createElement("img", { src: "cdwt.png" })
+	               ),
+	               _react2.default.createElement(
+	                  "ul",
+	                  { id: "nav-mobile", className: "right hide-on-med-and-down" },
+	                  _react2.default.createElement(
+	                     "li",
+	                     null,
+	                     _react2.default.createElement(
+	                        "a",
+	                        { href: "sass.html" },
+	                        "Sass"
+	                     )
+	                  ),
+	                  _react2.default.createElement(
+	                     "li",
+	                     null,
+	                     _react2.default.createElement(
+	                        "a",
+	                        { href: "badges.html" },
+	                        "Components"
+	                     )
+	                  ),
+	                  _react2.default.createElement(
+	                     "li",
+	                     null,
+	                     _react2.default.createElement(
+	                        "a",
+	                        { href: "collapsible.html" },
+	                        "JavaScript"
+	                     )
+	                  )
+	               )
+	            )
+	         );
+	      }
+	   }]);
+	
+	   return Navbar;
+	}(_react2.default.Component);
+	
+	exports.default = Navbar;
 
 /***/ }
 /******/ ]);
