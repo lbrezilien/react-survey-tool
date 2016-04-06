@@ -1,6 +1,6 @@
 'use strict'
 import React from 'react';
-import Survey from './surveys.jsx';
+import Surveys from './surveys.jsx';
 import NewSurvey from './newSurvey.jsx';
 
 export default class App extends React.Component{
@@ -19,7 +19,8 @@ export default class App extends React.Component{
          }]
        }
       ],
-      points : 0
+      points : 0,
+      editMode: false
     }
   }
 
@@ -27,7 +28,7 @@ export default class App extends React.Component{
    render(){
      return(<div>
            <NewSurvey app={this} />
-           <Survey surveys={this.state.mySurveys}/>
+           <Surveys app={this}  surveys={this.state.mySurveys}/>
            </div>)
 
    }

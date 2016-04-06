@@ -20208,7 +20208,8 @@
 	          title: 'What is your favorite sport?'
 	        }]
 	      }],
-	      points: 0
+	      points: 0,
+	      editMode: false
 	    };
 	    return _this;
 	  }
@@ -20220,7 +20221,7 @@
 	        'div',
 	        null,
 	        _react2.default.createElement(_newSurvey2.default, { app: this }),
-	        _react2.default.createElement(_surveys2.default, { surveys: this.state.mySurveys })
+	        _react2.default.createElement(_surveys2.default, { app: this, surveys: this.state.mySurveys })
 	      );
 	    }
 	  }]);
@@ -20240,7 +20241,7 @@
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
-	  value: true
+	   value: true
 	});
 	
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -20248,6 +20249,14 @@
 	var _react = __webpack_require__(/*! react */ 2);
 	
 	var _react2 = _interopRequireDefault(_react);
+	
+	var _survey = __webpack_require__(/*! ./survey.jsx */ 163);
+	
+	var _survey2 = _interopRequireDefault(_survey);
+	
+	var _EditSurvey = __webpack_require__(/*! ./EditSurvey.jsx */ 164);
+	
+	var _EditSurvey2 = _interopRequireDefault(_EditSurvey);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -20257,66 +20266,53 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	var Survey = function (_React$Component) {
-	  _inherits(Survey, _React$Component);
+	var Surveys = function (_React$Component) {
+	   _inherits(Surveys, _React$Component);
 	
-	  function Survey(props) {
-	    _classCallCheck(this, Survey);
+	   function Surveys(props) {
+	      _classCallCheck(this, Surveys);
 	
-	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Survey).call(this, props));
-	  }
+	      return _possibleConstructorReturn(this, Object.getPrototypeOf(Surveys).call(this, props));
+	   }
 	
-	  _createClass(Survey, [{
-	    key: 'render',
-	    value: function render() {
-	      var _this2 = this;
+	   _createClass(Surveys, [{
+	      key: 'render',
+	      value: function render() {
+	         var _this2 = this;
 	
-	      return _react2.default.createElement(
-	        'div',
-	        null,
-	        this.props.surveys.map(function (survey) {
-	          return _react2.default.createElement(
+	         var editMode = this.props.app.state.editMode;
+	         return _react2.default.createElement(
 	            'div',
-	            { key: _this2.props.surveys.indexOf(survey) },
+	            null,
 	            _react2.default.createElement(
-	              'h1',
-	              null,
-	              survey.title
+	               'button',
+	               null,
+	               'EditMode'
 	            ),
-	            _react2.default.createElement(
-	              'h2',
-	              null,
-	              'Point Value: ',
-	              survey.pointValue
-	            ),
-	            _react2.default.createElement(
-	              'h3',
-	              null,
-	              'Description: ',
-	              survey.description
-	            ),
-	            _react2.default.createElement(
-	              'h3',
-	              null,
-	              'Questions:'
-	            ),
-	            survey.questions.map(function (q) {
-	              return _react2.default.createElement(
-	                'li',
-	                { key: survey.questions.indexOf(q) },
-	                q.title
-	              );
+	            this.props.surveys.map(function (survey) {
+	               return _react2.default.createElement(
+	                  'div',
+	                  { key: _this2.props.surveys.indexOf(survey) },
+	                  _react2.default.createElement(
+	                     'div',
+	                     { className: 'hideInfo-' + editMode },
+	                     _react2.default.createElement(_survey2.default, { survey: survey })
+	                  ),
+	                  _react2.default.createElement(
+	                     'div',
+	                     { className: 'showEdit-' + editMode },
+	                     _react2.default.createElement(_EditSurvey2.default, { survey: survey })
+	                  )
+	               );
 	            })
-	          );
-	        })
-	      );
-	    }
-	  }]);
+	         );
+	      }
+	   }]);
 	
-	  return Survey;
+	   return Surveys;
 	}(_react2.default.Component);
 	
-	exports.default = Survey;
+	exports.default = Surveys;
 
 /***/ },
 /* 162 */
@@ -20434,6 +20430,171 @@
 	}(_react2.default.Component);
 	
 	exports.default = NewSurvey;
+
+/***/ },
+/* 163 */
+/*!************************!*\
+  !*** ./src/survey.jsx ***!
+  \************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Suvery = function (_React$Component) {
+	  _inherits(Suvery, _React$Component);
+	
+	  function Suvery(props) {
+	    _classCallCheck(this, Suvery);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(Suvery).call(this, props));
+	  }
+	
+	  _createClass(Suvery, [{
+	    key: 'render',
+	    value: function render() {
+	      var survey = this.props.survey;
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'h1',
+	          null,
+	          'Title: ',
+	          survey.title
+	        ),
+	        _react2.default.createElement(
+	          'h2',
+	          null,
+	          'Point Value: ',
+	          survey.pointValue
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Description: ',
+	          survey.description
+	        ),
+	        _react2.default.createElement(
+	          'h3',
+	          null,
+	          'Questions:'
+	        ),
+	        survey.questions.map(function (q) {
+	          return _react2.default.createElement(
+	            'li',
+	            { key: survey.questions.indexOf(q) },
+	            q.title
+	          );
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return Suvery;
+	}(_react2.default.Component);
+	
+	exports.default = Suvery;
+
+/***/ },
+/* 164 */
+/*!****************************!*\
+  !*** ./src/EditSurvey.jsx ***!
+  \****************************/
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(/*! react */ 2);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var EditSuvery = function (_React$Component) {
+	  _inherits(EditSuvery, _React$Component);
+	
+	  function EditSuvery(props) {
+	    _classCallCheck(this, EditSuvery);
+	
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(EditSuvery).call(this, props));
+	  }
+	
+	  _createClass(EditSuvery, [{
+	    key: "render",
+	    value: function render() {
+	      var survey = this.props.survey;
+	      return _react2.default.createElement(
+	        "div",
+	        null,
+	        _react2.default.createElement(
+	          "h1",
+	          null,
+	          "Title: ",
+	          _react2.default.createElement("input", { type: "text", ref: "title", defaultValue: survey.title }),
+	          " "
+	        ),
+	        _react2.default.createElement(
+	          "h2",
+	          null,
+	          "Point Value: ",
+	          _react2.default.createElement("input", { type: "text", ref: "pointValue", defaultValue: survey.pointValue })
+	        ),
+	        _react2.default.createElement(
+	          "h3",
+	          null,
+	          "Description: ",
+	          _react2.default.createElement("input", { type: "text", ref: "description", defaultValue: survey.description })
+	        ),
+	        _react2.default.createElement(
+	          "h3",
+	          null,
+	          "Questions:"
+	        ),
+	        survey.questions.map(function (q) {
+	          return _react2.default.createElement(
+	            "li",
+	            { key: survey.questions.indexOf(q) },
+	            _react2.default.createElement("input", { type: "text", ref: 'question' + survey.questions.indexOf(q), defaultValue: q.title })
+	          );
+	        })
+	      );
+	    }
+	  }]);
+	
+	  return EditSuvery;
+	}(_react2.default.Component);
+	
+	exports.default = EditSuvery;
 
 /***/ }
 /******/ ]);
