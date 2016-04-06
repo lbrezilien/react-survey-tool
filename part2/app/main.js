@@ -20370,14 +20370,12 @@
 	    key: 'submitNewSurvey',
 	    value: function submitNewSurvey(e) {
 	      e.preventDefault;
-	      var title = this.refs.surveyTitle.value;
-	      var pointValue = this.refs.pointValue.value;
-	      var description = this.refs.description.value;
-	      var questionArray = this.pullQuestions();
-	      var questions = questionArray.map(function (question) {
-	        return { title: question };
-	      });
-	      var newSurvey = { title: title, pointValue: pointValue, description: description, questions: questions };
+	      var valid = this.validateInputs(this.refs);
+	      debugger;
+	      if (!valid) {
+	        alert('Please complete the form correctly before submiting');return;
+	      }
+	      var newSurvey = this.createNewSurveyObject(this.refs);
 	      var currentSurveys = this.props.app.state.mySurveys;
 	      this.props.app.setState({ mySurveys: currentSurveys.concat(newSurvey), pointValue: 0 });
 	    }
@@ -20388,11 +20386,26 @@
 	      this.setState({ counter: this.state.counter += 1 });
 	    }
 	  }, {
-	    key: 'validateTitle',
-	    value: function validateTitle(input) {
-	      if (input.value.length() < validAmount) {
-	        return;
+	    key: 'createNewSurveyObject',
+	    value: function createNewSurveyObject(inputs) {
+	      var title = inputs.surveyTitle.value;
+	      var pointValue = inputs.pointValue.value;
+	      var description = inputs.description.value;
+	      var questionArray = this.pullQuestions();
+	      var questions = questionArray.map(function (question) {
+	        return { title: question };
+	      });
+	      return { title: title, pointValue: pointValue, description: description, questions: questions };
+	    }
+	  }, {
+	    key: 'validateInputs',
+	    value: function validateInputs(inputs) {
+	      for (var i in inputs) {
+	        if (!inputs[i].checkValidity()) {
+	          return false;
+	        }
 	      }
+	      return true;
 	    }
 	  }, {
 	    key: 'pullQuestions',
@@ -20415,7 +20428,7 @@
 	          { key: i },
 	          i + 1,
 	          ': ',
-	          _react2.default.createElement('input', { type: 'text', ref: "question" + i, placeholder: 'Question' }),
+	          _react2.default.createElement('input', { type: 'text', ref: "question" + i, pattern: ".{2,100}", placeholder: 'Question', title: 'Must be between 2 and 500 Characters', required: true }),
 	          ' '
 	        ));
 	      }

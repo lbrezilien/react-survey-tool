@@ -8,12 +8,10 @@ export default class NewSurvey extends React.Component{
 
     submitNewSurvey(e){
       e.preventDefault
-      let title = this.refs.surveyTitle.value
-      let pointValue = this.refs.pointValue.value
-      let description = this.refs.description.value
-      let questionArray = this.pullQuestions();
-      let questions = questionArray.map((question)=> {return {title: question}} )
-      let newSurvey = {title, pointValue, description, questions}
+      let valid = this.validateInputs(this.refs)
+      debugger;
+      if(!valid){ alert('Please complete the form correctly before submiting'); return }
+      let newSurvey = this.createNewSurveyObject(this.refs)
       let currentSurveys = this.props.app.state.mySurveys
       this.props.app.setState({mySurveys: currentSurveys.concat(newSurvey), pointValue:0})
     }
@@ -23,10 +21,20 @@ export default class NewSurvey extends React.Component{
       this.setState({counter: this.state.counter += 1}) ;
     }
 
-    validateTitle(input){
-      if (input.value.length() < validAmount){
-        return
-      }
+    createNewSurveyObject(inputs){
+      let title = inputs.surveyTitle.value
+      let pointValue = inputs.pointValue.value
+      let description = inputs.description.value
+      let questionArray = this.pullQuestions();
+      let questions = questionArray.map((question)=> {return {title: question}} )
+      return {title, pointValue, description, questions}
+    }
+
+    validateInputs(inputs){
+          for(let i in inputs){
+            if(!inputs[i].checkValidity()){ return false; }
+          }
+          return true
     }
 
     pullQuestions(){
@@ -42,7 +50,7 @@ export default class NewSurvey extends React.Component{
     render(){
         let rows = []
         for(let i=0; i < this.state.counter; i++){
-          rows.push( <div key={i}>{i+1}: <input type="text" ref={"question"+i} placeholder="Question"/> </div>)
+          rows.push( <div key={i}>{i+1}: <input type="text" ref={"question"+i} pattern={".{2,100}"} placeholder="Question" title="Must be between 2 and 500 Characters" required={true}/> </div>)
         }
 
        return(<div>
@@ -55,7 +63,7 @@ export default class NewSurvey extends React.Component{
                   Description: <input type="textarea" ref="description" placeholder="Description" required={true}  pattern={".{2,500}"} title="Must be between 2 and 500 Characters"/>
                 </div>
                 <div>
-                  Questions: {rows.map((i)=> i)}   <a href="#" onClick={this.addQuestionInput.bind(this)}>+</a>
+                  Questions: {rows.map((i)=> i)}   <a href="#" onClick={this.addQuestionInput.bind(this)} >+</a>
                 </div>
                   <button onClick={ this.submitNewSurvey.bind(this,this.props)}>Submit</button>
                 </form>
